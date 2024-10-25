@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQ-10 Questionnaire</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("q_wall.jpg");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        .question {
+            display: none;
+            margin-top: 20px;
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="intro.html">🏡</a>
+</nav>
+<div class="container">
+    <h1>Let's do this!🐵</h1>
+    <div id="form">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="number" id="age" placeholder="Your Age" required>
+        <button id="startButton">Start🐦‍🔥</button>
+    </div>
+    <div id="questions" style="display: none;">
+        <div class="question" id="question1"></div>
+        <button id="nextButton" style="display: none;">Next Question</button>
+        <button id="submitButton" style="display: none;">Submit</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        "I often notice small sounds when others do not.",
+        "When I’m reading a story, I find it difficult to work out the characters’ intentions.",
+        "I find it easy to 'read between the lines' when someone is talking to me.",
+        "I usually concentrate more on the whole picture, rather than the small details.",
+        "I know how to tell if someone listening to me is getting bored.",
+        "I find it easy to do more than one thing at once.",
+        "I find it easy to work out what someone is thinking or feeling just by looking at their face.",
+        "If there is an interruption, I can switch back to what I was doing very quickly.",
+        "I like to collect information about categories of things.",
+        "I find it difficult to work out people’s intentions."
+    ];
+
+    const answers = [
+        "Definitely Agree",
+        "Slightly Agree",
+        "Slightly Disagree",
+        "Definitely Disagree"
+    ];
+
+    let currentQuestion = 0;
+    const userAnswers = [];
+
+    document.getElementById('startButton').onclick = function() {
+        document.getElementById('form').style.display = 'none';
+        document.getElementById('questions').style.display = 'block';
+        showQuestion();
+    };
+
+    function showQuestion() {
+        const questionDiv = document.getElementById('question1');
+        
+        if (currentQuestion < questions.length) {
+            questionDiv.innerHTML = `<p>${questions[currentQuestion]}</p>` + answers.map(answer => 
+                `<label>
+                    <input type="radio" name="answer${currentQuestion}" value="${answer}" required> ${answer}
+                </label><br>` 
+            ).join('');
+            questionDiv.style.display = 'block';
+
+            document.getElementById('nextButton').style.display = 'block';
+            document.getElementById('submitButton').style.display = 'none';
+        } else {
+            document.getElementById('submitButton').style.display = 'block';
+        }
+    }
+
+    document.getElementById('nextButton').onclick = function() {
+        const radios = document.getElementsByName(`answer${currentQuestion}`);
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                userAnswers.push(radios[i].value);
+                break;
+            }
+        }
+        currentQuestion++;
+        showQuestion();
+    };
+
+    document.getElementById('submitButton').onclick = async function() {
+        const radios = document.getElementsByName(`answer${currentQuestion - 1}`);
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                userAnswers.push(radios[i].value);
+                break;
+            }
+        }
+
+        let score = 0;
+        for (let i = 0; i < userAnswers.length; i++) {
+            if ((i === 0 || i === 6 || i === 7 || i === 9) && (userAnswers[i] === "Definitely Agree" || userAnswers[i] === "Slightly Agree")) {
+                score++;
+            } else if ((i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 8) && (userAnswers[i] === "Definitely Disagree" || userAnswers[i] === "Slightly Disagree")) {
+                score++;
+            }
+        }
+
+        // Prepare data to send to the server
+        const name = document.getElementById('name').value;
+        const age = document.getElementById('age').value;
+        const responseData = {
+            name,
+            age: parseInt(age),
+            answers: userAnswers.map(answer => answer === "Definitely Agree" || answer === "Slightly Agree" ? 1 : 0),
+            score,
+        };
+
+        // Send data to the server
+        try {
+            const response = await fetch('http://localhost:5000/api/responses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(responseData),
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log(result.message);
+                window.location.href = `result.html?adhd=${score >=6}`;
+            } else {
+                console.error('Failed to save response');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+</script>
+</body>
+</html>

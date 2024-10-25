@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("yay.jpg");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        nav {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #333;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="intro.html">🏡</a>
+    <a href="questionnaire.html">📄</a>
+</nav>
+
+<div class="container">
+    <h1>Result</h1>
+    <p id="result"></p>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const autistic = urlParams.get('autistic');
+    if (autistic === 'true') {
+        document.getElementById('result').innerHTML = 'Based on your answers, you have a high chance of having ADHD.';
+    } else {
+        document.getElementById('result').innerHTML = 'Based on your answers, you do not have a high chance of having ADHD.';
+    }
+</script>
+</body>
+</html>

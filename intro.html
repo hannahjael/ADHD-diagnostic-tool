@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeCare😇</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> <!-- link to external stylesheet -->
+    <style>
+        body {
+            background-image: url("choi-ft5.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+        #canvasContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place behind other content */
+        }
+        header h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 48px;
+            font-weight: bold;
+            color: #222;
+            text-align: center;
+            text-shadow: 2px 2px 4px #aaa;
+            margin-top: 20px;
+        }
+        main {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+        section#introduction h2 {
+            font-family: 'Lato', sans-serif;
+            font-size: 30px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        section#introduction p, ul li {
+            font-family: 'Lato', sans-serif;
+            font-size: 20px;
+            color: #444;
+        }
+        section#introduction button {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: white;
+            color: black;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        footer {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvasContainer"></div> <!-- Container for the Three.js canvas -->
+    
+    <header>
+        <h1>WeCare</h1>
+    </header>
+    <main class="container">
+        <section id="introduction" class="row">
+            <div class="col-12 col-md-8 offset-md-2">
+                <h2>About ADHD</h2>
+                <p>ADHD – also referred to as attention-deficit/hyperactivity disorder – constitutes a diverse group of conditions related to development of the brain.</p>
+                <ul>
+                    <li>About 1 in 100 children has ADHD.</li>
+                    <li>Characteristics may be detected in early childhood, but ADHD is often not diagnosed until much later.</li>
+                    <li>The abilities and needs of people with ADHD vary and can evolve over time.</li>
+                    <li>While some people with ADHD can live independently, others have severe disabilities and require life-long care and support.</li>
+                </ul>
+                <p>Evidence-based psychosocial interventions can improve communication and social skills, with a positive impact on the well-being and quality of life of both people with ADHD and their caregivers.</p>
+                <p>Care for people with ADHD needs to be accompanied by actions at community and societal levels for greater accessibility, inclusivity and support.</p>
+                <div class="text-center mt-4">
+                    <h2>WeCare: A First Step Towards Understanding</h2>
+                    <p>Are you curious about whether you or someone you know might have attention-deficit/hyperactivity disorder (ADHD)? WeCare offers a quick and easy way to explore that possibility. The AQ-10 questionnaire, a simple self-assessment, provides valuable insights into common ADHD traits. It's a non-threatening way to gain a better understanding of yourself and your experiences.</p>
+                    <p>Remember, WeCare is just the beginning. If you find the results intriguing, it's always a good idea to consult with a qualified healthcare professional for a comprehensive evaluation.</p>
+                    <button><a href="questionnaire.html" class="text-decoration-none" style="color:black;">TAKE TEST NOW✔️</a></button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <hr style="border: 0; height: 1px; background-color: black; margin-bottom: 20px;">
+        <p>&copy; 2024 WeCare</p>
+    </footer>
+
+    <!-- Bootstrap JS (optional but good for interactivity) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Three.js script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Create the Three.js scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('canvasContainer'),
+            antialias: true
+        });
+
+        // Add a simple 3D cube to the scene
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        // Animate the cube
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>

@@ -1,1 +1,1 @@
-# ADHD-diagnostic-tool
+# ADHD-SCREENING-TOOL
